@@ -33,7 +33,7 @@ userSchema.pre("save", async function (next) {
 //method to generate a token
 userSchema.methods.generateAuthToken = function () {
   try {
-    const payload = { _id: this._id, name: this.name, email: this.email };
+    const payload = { _id: this._id };
     const secretKey = process.env.SECRET_KEY;
     const options = { expiresIn: "15m" };
 

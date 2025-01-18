@@ -8,10 +8,10 @@ const authenticateToken = require("../middleware/authenticateToken");
 route.get("/", async (req, res) => {
   try {
     const users = await User.find();
-    res.status(200).json({ message: "success", data: users });
     if (!users) {
-      res.status(404).json({ message: "No data found!" });
+      return res.status(404).json({ message: "No data found!" });
     }
+    res.status(200).json({ message: "success", data: users });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -19,16 +19,13 @@ route.get("/", async (req, res) => {
 
 route.get("/auth", authenticateToken, (req, res) => {
   try {
-    const user = req.user;
-    if (!user) {
-      return res.status(401);
-    }
-    res.status(200).json({ message: "User is Verified!!", user });
+    const { name, email } = req.user;
+    res
+      .status(200)
+      .json({ message: "User is Verified!!", user: { name, email } });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error!" });
   }
-
-  res.status(200).json({ message: "Hello from the validate api" });
 });
 
 route.get("/:id", async (req, res) => {
@@ -71,7 +68,7 @@ route.post("/", async (req, res) => {
   } catch (error) {
     console.log(error);
     if (error.code === 11000) {
-      res.status(400).json({ message: "Email already exits!!" });
+      return res.status(400).json({ message: "Email already exits!!" });
     }
     res.status(500).json({ message: "Something went Wrong!!" });
   }

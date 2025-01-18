@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-// import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
+  const navigate = useNavigate();
   const token = localStorage.getItem("usertoken");
   const [user, setUser] = useState("");
 
@@ -19,11 +20,12 @@ function Dashboard() {
         );
         setUser(response.data.user.name);
       } catch (error) {
+        navigate("/*");
         console.log("Error:", error.message);
       }
     }
     fetch();
-  }, [token]);
+  }, [token, user, navigate]);
   return <div>Welcome, {user} </div>;
 }
 
