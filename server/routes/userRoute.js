@@ -112,7 +112,7 @@ route.post("/login", async (req, res) => {
 route.get("/validate", (req, res) => {
   const token = req.headers.authorization;
   if (!token) {
-    return res.status(404).json({ message: "Couldn't authenticate" });
+    return res.status(401).json({ message: "UnAuthorize!!" });
   }
   res.status(200).json({ message: "hurray!!" });
   console.log(token);
