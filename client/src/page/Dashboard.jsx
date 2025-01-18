@@ -1,27 +1,30 @@
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 // import { useLocation, useNavigate } from "react-router-dom";
 
 function Dashboard() {
   const token = localStorage.getItem("usertoken");
-  const validUser = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/api/users/validate", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      });
-      console.log(response);
-    } catch (error) {
-      console.log("Error:", error.message);
-    }
-  };
+  const [user, setUser] = useState("");
+
   useEffect(() => {
-    validUser();
-  }, []);
-  return <div>Welcome, </div>;
+    async function fetch() {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/users/auth",
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setUser(response.data.user.name);
+      } catch (error) {
+        console.log("Error:", error.message);
+      }
+    }
+    fetch();
+  }, [token]);
+  return <div>Welcome, {user} </div>;
 }
 
 export default Dashboard;

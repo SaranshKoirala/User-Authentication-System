@@ -17,6 +17,20 @@ route.get("/", async (req, res) => {
   }
 });
 
+route.get("/auth", authenticateToken, (req, res) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      return res.status(401);
+    }
+    res.status(200).json({ message: "User is Verified!!", user });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error!" });
+  }
+
+  res.status(200).json({ message: "Hello from the validate api" });
+});
+
 route.get("/:id", async (req, res) => {
   try {
     const user = await User.findBy(req.params.id);
@@ -89,10 +103,10 @@ route.post("/login", async (req, res) => {
     const token = await user.generateAuthToken();
 
     //cookie generate
-    res.cookie("usercookie", token, {
+    res.cookie("token", token, {
       httpOnly: true,
       maxAge: 15 * 60 * 1000, //15min in milliseconds
-      // sameSite: "lax",
+      sameSite: "None",
     });
 
     res.status(200).json({
@@ -107,15 +121,6 @@ route.post("/login", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Internal server error." });
   }
-});
-
-route.get("/validate", (req, res) => {
-  const token = req.headers.authorization;
-  if (!token) {
-    return res.status(401).json({ message: "UnAuthorize!!" });
-  }
-  res.status(200).json({ message: "hurray!!" });
-  console.log(token);
 });
 
 module.exports = route;
