@@ -103,7 +103,7 @@ function Login() {
           Login
         </button>
         <p className="flex gap-1">
-          Don't have an Account?
+          Don&apos;t have an Account?
           <Link to={"/register"} className="text-blue-900">
             SignUp
           </Link>
